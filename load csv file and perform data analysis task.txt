@@ -1,0 +1,67 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import plotly.express as px
+import seaborn as sns
+
+import warnings
+warnings.filterwarnings("ignore")
+df = pd.read_csv(r"C:\Users\hp\Desktop\GEN AI - PRACTICE\datasets\Travel.csv")
+df
+df.describe()
+df.info()
+df.duplicated().sum()#there are no duplicates in the data.
+df = df.drop_duplicates()
+df#no change in rows and columns because of no any duplicates.
+df.isnull().sum()
+df['Age'].unique()
+df['Age'].astype(float)
+df[((df['TypeofContact'] != 'Self Enquiry') & (df['TypeofContact'] != 'Company Invited'))]
+
+df.loc[(df['TypeofContact'] != 'Self Enquiry') & (df['TypeofContact'] != 'Company Invited'), 'TypeofContact'] = df['TypeofContact'].mode()[0]
+df[((df['TypeofContact'] != 'Self Enquiry') & (df['TypeofContact'] != 'Company Invited'))]
+cat_cols = [col for col in df.columns if df[col].dtype == 'O']
+num_cols = [col for col in df.columns if df[col].dtype != 'O']
+cat_cols
+num_cols
+#here we are filling null values with their respective mean,median or mode values.
+#if the null value percent is very less we can drop null. values by caluclating its percentage using df.dropna(axis = 0)
+#if null values are greater than 40% in a column its better to drop that column.
+#to calculate percentage of null values>>round((df.isnull().sum()/len(df.index))*100,2)>>round used to round off the value for 2 decimal values.
+mode_values = df[cat_cols].mode
+df[cat_cols] = df[cat_cols].fillna(mode_values)
+df.isnull().sum()
+mean_values = df[num_cols].mean
+df[num_cols] = df[num_cols].fillna(mean_values)
+df.isnull().sum()#there are no null values.
+df['TypeofContact'].unique()
+df['TypeofContact'].value_counts()
+for col in cat_cols:
+    print(f"{col} has {df[col].unique()}\n")
+df['Gender'] = df['Gender'].replace('Fe Male','Female')
+df['Gender'].unique()#cleared text data noise in gender 
+#univariate analysis for all the columns in one go.
+for col in cat_cols:
+    plt.figure(figsize = (8,5))
+    sns.countplot(x = col,data = df)
+    plt.title(f"Univariate analysis for column {col}")
+#Bi-variate analysis
+sns.scatterplot(x ='Age',y = 'DurationOfPitch',hue='ProdTaken',data = df)
+
+from sklearn.preprocessing  import LabelEncoder
+labelencoder = LabelEncoder()
+for col in cat_cols:
+    df[col] = labelencoder.fit_transform(df[col])
+
+df
+from sklearn.model_selection import train_test_split
+
+
+
+
+
+
+
+
+
+

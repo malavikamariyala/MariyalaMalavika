@@ -1,0 +1,20 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+#load dataset
+df = sns.load_dataset('titanic')
+#display dataset
+print(df.head())
+#set the style for the plots
+sns.set(style="whitegrid")
+#Barchart
+plt.figure(figsize=(8,5))
+sns.countplot(x='pclass', data=df, palette='muted')
+plt.title('number of passengers by class')
+plt.show()
+#Scatter plot
+plt.figure(figsize=(8,5))
+sns.scatterplot(x='age', y='fare', hue='survived', data=df, palette='coolwarm', s=100)
+plt.title('Fare vs Age (Colored by Survival)')
+plt.show()
+
